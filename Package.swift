@@ -10,7 +10,7 @@ let package = Package(
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
-        .executable(name: "CLI", targets: ["CLI"]),
+        .executable(name: "alchemy", targets: ["CLI"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.3.0")),
