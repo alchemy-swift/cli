@@ -13,32 +13,17 @@ private let kXcodeprojName = "AlchemyQuickstart.xcodeproj"
 private enum TemplateType: CaseIterable {
     /// A fresh, server only template.
     case server
-    /// Server & shared library template.
-    case serverShared
     /// Server, shared library & iOS template.
-    case serverSharediOS
+    case all
     
     var description: String {
         switch self {
         case .server:
-            return "Server only"
-        case .serverShared:
-            return "Server + Shared framework (useful for integrating into existing xcode projects)"
-        case .serverSharediOS:
-            return "Server + iOS App + Shared framework"
+            return "Alchemy server only"
+        case .all:
+            return "iOS, Server & a shared library in a single Xcode project."
         }
     }
-}
-
-/// The kind of project that should be created.
-private enum NewProjectType {
-    /// A server only package.
-    case server
-    /// A shared package and a server package that has it as a dependency.
-    case serverShared
-    /// A shared package, a server package, and an iOS app target. The server & app depend on the shared
-    /// package and there is a `.xcodeproj`.
-    case serverSharedApp
 }
 
 struct NewProject: ParsableCommand {
@@ -61,16 +46,7 @@ struct NewProject: ParsableCommand {
         case .server:
             _ = try Process().shell("cp -r \(kTempDirectory)/\(kServerOnlyDirectory) \(self.name)")
             print("Created package at '\(self.name)'.")
-        case .serverShared:
-            let serverDirectory = "\(kTempDirectory)/\(kServerAppSharedDirectory)/\(kServerPackageDirectory)"
-            let sharedDirectory = "\(kTempDirectory)/\(kServerAppSharedDirectory)/\(kSharedPackageDirectory)"
-            let serverDestination = "Server"
-            let sharedDestination = "Shared"
-            
-            _ = try Process().shell("cp -r \(serverDirectory) \(serverDestination)")
-            _ = try Process().shell("cp -r \(sharedDirectory) \(sharedDestination)")
-            print("Created packages at '\(serverDestination)' & '\(sharedDestination)'.")
-        case .serverSharediOS:
+        case .all:
             _ = try Process().shell("cp -r \(kTempDirectory)/\(kServerAppSharedDirectory) \(self.name)")
             
             let projectTarget = "\(self.name)/\(self.name).xcodeproj"
