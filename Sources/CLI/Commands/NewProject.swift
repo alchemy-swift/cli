@@ -19,9 +19,9 @@ private enum TemplateType: CaseIterable {
     var description: String {
         switch self {
         case .server:
-            return "Alchemy server only"
+            return "Server only."
         case .all:
-            return "iOS, Server & a shared library in a single Xcode project."
+            return "iOS, Server & Shared library. In a single Xcode project."
         }
     }
 }
@@ -59,7 +59,7 @@ struct NewProject: ParsableCommand {
     
     private func queryTemplateType(allowed: [TemplateType] = TemplateType.allCases) -> TemplateType {
         let response = Process().queryUser(
-            query: "What type of project do you want to create?",
+            query: "Which quickstart template?",
             choices: allowed.map { $0.description }
         )
         
