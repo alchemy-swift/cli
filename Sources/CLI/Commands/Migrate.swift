@@ -42,6 +42,8 @@ struct Migrate: ParsableCommand {
         
         private func migrationTemplate(name: String) -> String {
             """
+            import Alchemy
+            
             struct \(name): Migration {
                 func up(schema: Schema) {
                     schema.create(table: "users") {
