@@ -14,24 +14,44 @@ struct Migrate: ParsableCommand {
         var name: String
         
         func run() throws {
-            var migrationLocation = "Sources"
-            if
-                let migrationLocations = try? Process()
-                    .shell("find Sources -type d -name 'Migrations'")
-                    .split(separator: "\n"),
-                let migrationsFolder = migrationLocations.first
+            var migrationLocation = ""
+
+            let migrationsPath = "Sources/Migrations/"
+            let sourcesPath = "Sources/"
+            var migrationsDirectory: ObjCBool = false
+            var sourcesDirectory: ObjCBool = false
+            if let migrationsFolderExists = FileManager.default
+                .fileExists(atPath: migrationsPath, isDirectory: &migrationsDirectory),
+               migrationsDirectory.boolValue
             {
-                migrationLocation = String(migrationsFolder)
+                migrationLocation = migrationsPath
+            } else if let sourcesFolderExists = FileManager.default
+                        .fileExists(atPath: sourcesPath, isDirectory: &sourcesDirectory),
+                      sourcesDirectory.boolValue
+            {
+                migrationLocation = sourcesPath
             }
             
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyyMMddHHmmss"
-            let fileName = "_\(dateFormatter.string(from: Date()))\(name)"
-            let template = self.migrationTemplate(name: fileName)
+            print("The location will be: \(migrationLocation)")
 
-            let destinationURL = URL(fileURLWithPath: "\(migrationLocation)/\(fileName).swift")
-            try template.write(to: destinationURL, atomically: true, encoding: .utf8)
-            print("Created migration '\(fileName)' at \(migrationLocation). Don't forget to add it to `Services.db.migrations`!")
+//            var migrationLocation = "Sources"
+//            if
+//                let migrationLocations = try? Process()
+//                    .shell("find Sources -type d -name 'Migrations'")
+//                    .split(separator: "\n"),
+//                let migrationsFolder = migrationLocations.first
+//            {
+//                migrationLocation = String(migrationsFolder)
+//            }
+//
+//            let dateFormatter = DateFormatter()
+//            dateFormatter.dateFormat = "yyyyMMddHHmmss"
+//            let fileName = "_\(dateFormatter.string(from: Date()))\(name)"
+//            let template = self.migrationTemplate(name: fileName)
+//
+//            let destinationURL = URL(fileURLWithPath: "\(migrationLocation)/\(fileName).swift")
+//            try template.write(to: destinationURL, atomically: true, encoding: .utf8)
+//            print("Created migration '\(fileName)' at \(migrationLocation). Don't forget to add it to `Services.db.migrations`!")
         }
         
         private func migrationTemplate(name: String) -> String {
