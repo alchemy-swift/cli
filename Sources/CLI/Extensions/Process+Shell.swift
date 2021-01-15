@@ -15,8 +15,8 @@ extension Process {
         let outputPipe = Pipe()
         let errorPipe = Pipe()
         
-        self.standardOutput = outputPipe
-        self.standardError = errorPipe
+//        self.standardOutput = outputPipe
+//        self.standardError = errorPipe
         
         try self.run()
         
