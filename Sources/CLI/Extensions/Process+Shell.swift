@@ -15,8 +15,20 @@ extension Process {
         let outputPipe = Pipe()
         let errorPipe = Pipe()
         
-//        self.standardOutput = outputPipe
-//        self.standardError = errorPipe
+        outputPipe.fileHandleForReading.readabilityHandler = { pipe in
+            if let line = String(data: pipe.availableData, encoding: .utf8) {
+                print(line)
+            }
+        }
+        
+        errorPipe.fileHandleForReading.readabilityHandler = { pipe in
+            if let line = String(data: pipe.availableData, encoding: .utf8) {
+                print(line)
+            }
+        }
+        
+        self.standardOutput = outputPipe
+        self.standardError = errorPipe
         
         try self.run()
         
