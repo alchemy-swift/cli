@@ -44,6 +44,7 @@ struct NewProject: ParsableCommand {
         switch self.queryTemplateType() {
         case .backend:
             _ = try Process().shell("cp -r \(kTempDirectory)/\(kBackendDirectory) \(self.name)")
+            _ = try Process().shell("git init \(name)")
             print("Created package at '\(self.name)'.")
         case .fullstack:
             _ = try Process().shell("cp -r \(kTempDirectory)/\(kFullstackDirectory) \(self.name)")
@@ -52,6 +53,7 @@ struct NewProject: ParsableCommand {
             _ = try Process().shell("mv \(self.name)/\(kXcodeprojName) \(projectTarget)")
             // Rename relevant scheme containers so the iOS scheme loads properly.
             _ = try Process().shell("find \(self.name) -type f -name '*.xcscheme' -print0 | xargs -0 sed -i '' -e 's/AlchemyFullstack/\(self.name)/g'")
+            _ = try Process().shell("git init \(name)")
             print("Created project at '\(self.name)'. Use the project file '\(projectTarget)'.")
         }
     }
