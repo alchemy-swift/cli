@@ -1,3 +1,3 @@
 # AlchemyCLI
 
-A description of this package.
+Helpful tools for working with Alchemy.

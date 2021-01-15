@@ -24,6 +24,7 @@ private enum TemplateType: CaseIterable {
     }
 }
 
+/// Creates a new project from one of the quickstart templates.
 struct NewProject: ParsableCommand {
     static var configuration = CommandConfiguration(commandName: "new")
     

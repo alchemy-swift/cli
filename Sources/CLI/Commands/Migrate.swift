@@ -1,21 +1,14 @@
 import ArgumentParser
 import Foundation
 
-struct MigrationError: Error {
-    let info: String
-    
-    var description: String {
-        self.info
-    }
-}
-
 struct Migrate: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "migrate",
-        subcommands: [New.self],
-        defaultSubcommand: New.self
+        subcommands: [Run.self, New.self],
+        defaultSubcommand: Run.self
     )
     
+    /// Generate a new migration
     struct New: ParsableCommand {
         @Argument
         var name: String
@@ -61,16 +54,27 @@ struct Migrate: ParsableCommand {
             """
         }
     }
-    
+
+    /// Passthrough command for running an app with the migrate
+    /// parameter.
     struct Run: ParsableCommand {
-        @Argument
-        var name: String
+        @Option(name: .shortAndLong, help: "The executable product to run. Defaults to the current folder name.")
+        var product: String?
+        
+        @Flag(help: "Should migrations be rolled back.")
+        var rollback: Bool = false
         
         func run() throws {
-            // Build
-//            _ = try Process().shell("swift")
-            // Migrate
-//            _ = try Process().shell("rm -rf \(kTempDirectory)")
+            let currentPath = FileManager.default.currentDirectoryPath.split(separator: "/").last
+            guard let executable = self.product ?? currentPath.map(String.init) else {
+                return
+            }
+            
+            var commandString = "swift run -c release -Xswiftc -g \(executable) migrate"
+            if self.rollback {
+                commandString.append(" --rollback")
+            }
+            _ = try Process().shell(commandString)
         }
     }
 }
