@@ -28,7 +28,7 @@ private enum TemplateType: CaseIterable {
 struct NewProject: ParsableCommand {
     static var configuration = CommandConfiguration(commandName: "new")
     
-    @Argument
+    @Argument(help: "What to name your project.")
     var name: String
     
     func run() throws {
