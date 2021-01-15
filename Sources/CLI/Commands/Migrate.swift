@@ -20,13 +20,11 @@ struct Migrate: ParsableCommand {
             let sourcesPath = "Sources/"
             var migrationsDirectory: ObjCBool = false
             var sourcesDirectory: ObjCBool = false
-            if let migrationsFolderExists = FileManager.default
-                .fileExists(atPath: migrationsPath, isDirectory: &migrationsDirectory),
+            if FileManager.default.fileExists(atPath: migrationsPath, isDirectory: &migrationsDirectory),
                migrationsDirectory.boolValue
             {
                 migrationLocation = migrationsPath
-            } else if let sourcesFolderExists = FileManager.default
-                        .fileExists(atPath: sourcesPath, isDirectory: &sourcesDirectory),
+            } else if FileManager.default.fileExists(atPath: sourcesPath, isDirectory: &sourcesDirectory),
                       sourcesDirectory.boolValue
             {
                 migrationLocation = sourcesPath
