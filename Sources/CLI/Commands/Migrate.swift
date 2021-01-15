@@ -4,8 +4,8 @@ import Foundation
 struct Migrate: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "migrate",
-        subcommands: [Run.self, New.self],
-        defaultSubcommand: Run.self
+        subcommands: [New.self],
+        defaultSubcommand: New.self
     )
     
     /// Generate a new migration
