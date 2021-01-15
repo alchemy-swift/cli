@@ -12,7 +12,8 @@ struct MigrationError: Error {
 struct Migrate: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "migrate",
-        subcommands: [New.self]
+        subcommands: [New.self],
+        defaultSubcommand: New.self
     )
     
     struct New: ParsableCommand {
@@ -47,9 +48,9 @@ struct Migrate: ParsableCommand {
             struct \(name): Migration {
                 func up(schema: Schema) {
                     schema.create(table: "users") {
-                        $0.uuid("id").primary()
-                        $0.string("name").nullable(false)
-                        $0.string("email").nullable(false).unique()
+                        $0.int("id").primary()
+                        $0.string("name").notNull()
+                        $0.string("email").notNull().unique()
                     }
                 }
                 
@@ -58,6 +59,18 @@ struct Migrate: ParsableCommand {
                 }
             }
             """
+        }
+    }
+    
+    struct Run: ParsableCommand {
+        @Argument
+        var name: String
+        
+        func run() throws {
+            // Build
+//            _ = try Process().shell("swift")
+            // Migrate
+//            _ = try Process().shell("rm -rf \(kTempDirectory)")
         }
     }
 }

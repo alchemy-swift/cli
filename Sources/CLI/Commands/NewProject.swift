@@ -3,25 +3,23 @@ import Foundation
 
 private let kQuickstartRepo = "git@github.com:joshuawright11/alchemy.git"
 private let kTempDirectory = "/tmp/alchemy-quickstart"
-private let kServerOnlyDirectory = "Quickstart/ServerOnly"
-private let kServerAppSharedDirectory = "Quickstart/ServerAppShared"
-private let kServerPackageDirectory = "Server"
-private let kSharedPackageDirectory = "Shared"
-private let kXcodeprojName = "AlchemyQuickstart.xcodeproj"
+private let kBackendDirectory = "Quickstarts/Backend"
+private let kFullstackDirectory = "Quickstarts/Fullstack"
+private let kXcodeprojName = "AlchemyFullstack.xcodeproj"
 
 /// What project template does the user want downloaded?
 private enum TemplateType: CaseIterable {
-    /// A fresh, server only template.
-    case server
-    /// Server, shared library & iOS template.
-    case all
+    /// A fresh, backend only template.
+    case backend
+    /// Fullstack project with Backend, iOS, Shared.
+    case fullstack
     
     var description: String {
         switch self {
-        case .server:
-            return "Server only."
-        case .all:
-            return "iOS, Server & Shared library. In a single Xcode project."
+        case .backend:
+            return "Backend: an Alchemy server."
+        case .fullstack:
+            return "Fullstack: an Xcode project with 3 targets; iOS, Backend, & Shared."
         }
     }
 }
@@ -43,23 +41,23 @@ struct NewProject: ParsableCommand {
     
     private func createProject() throws {
         switch self.queryTemplateType() {
-        case .server:
-            _ = try Process().shell("cp -r \(kTempDirectory)/\(kServerOnlyDirectory) \(self.name)")
+        case .backend:
+            _ = try Process().shell("cp -r \(kTempDirectory)/\(kBackendDirectory) \(self.name)")
             print("Created package at '\(self.name)'.")
-        case .all:
-            _ = try Process().shell("cp -r \(kTempDirectory)/\(kServerAppSharedDirectory) \(self.name)")
+        case .fullstack:
+            _ = try Process().shell("cp -r \(kTempDirectory)/\(kFullstackDirectory) \(self.name)")
             
             let projectTarget = "\(self.name)/\(self.name).xcodeproj"
             _ = try Process().shell("mv \(self.name)/\(kXcodeprojName) \(projectTarget)")
             // Rename relevant scheme containers so the iOS scheme loads properly.
-            _ = try Process().shell("find \(self.name) -type f -name '*.xcscheme' -print0 | xargs -0 sed -i '' -e 's/AlchemyQuickstart/\(self.name)/g'")
+            _ = try Process().shell("find \(self.name) -type f -name '*.xcscheme' -print0 | xargs -0 sed -i '' -e 's/AlchemyFullstack/\(self.name)/g'")
             print("Created project at '\(self.name)'. Use the project file '\(projectTarget)'.")
         }
     }
     
     private func queryTemplateType(allowed: [TemplateType] = TemplateType.allCases) -> TemplateType {
         let response = Process().queryUser(
-            query: "Which quickstart template?",
+            query: "Which template would you like to use?",
             choices: allowed.map { $0.description }
         )
         
