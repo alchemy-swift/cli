@@ -22,9 +22,13 @@ struct Serve: ParsableCommand {
         }
         
         if let socket = self.unixSocket {
-            _ = try Process().shell("swift run -c release -Xswiftc -g \(executable) serve --unixSocket \(socket)")
+            let command = "swift run -c release -Xswiftc -g \(executable) serve --unixSocket \(socket)"
+            print(command)
+            _ = try Process().shell(command)
         } else {
-            _ = try Process().shell("swift run -c release -Xswiftc -g \(executable) serve --host \(self.host) --port \(self.port)")
+            let command = "swift run -c release -Xswiftc -g \(executable) serve --host \(self.host) --port \(self.port)"
+            print(command)
+            _ = try Process().shell(command)
         }
     }
 }
