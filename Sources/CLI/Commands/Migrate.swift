@@ -17,7 +17,7 @@ struct Migrate: ParsableCommand {
             var migrationLocation = "Sources"
             if
                 let migrationLocations = try? Process()
-                    .shell("find Sources -type d -name 'Migrations'", getOutput: true)
+                    .shell("find Sources -type d -name 'Migrations'")
                     .split(separator: "\n"),
                 let migrationsFolder = migrationLocations.first
             {
