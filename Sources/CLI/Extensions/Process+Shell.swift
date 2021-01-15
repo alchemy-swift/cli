@@ -8,27 +8,17 @@ extension Process {
     /// Executes a shell command.
     ///
     /// - throws: `ShellError` if `standardError` isn't empty afterwards.
-    func shell(_ command: String) throws -> String {
+    func shell(_ command: String, getOutput: Bool = false) throws -> String {
         self.launchPath = "/bin/bash"
         self.arguments = ["-c", command]
 
         let outputPipe = Pipe()
         let errorPipe = Pipe()
         
-        outputPipe.fileHandleForReading.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: .utf8) {
-                print(line, terminator: "")
-            }
+        if getOutput {
+            self.standardOutput = outputPipe
+            self.standardError = errorPipe
         }
-        
-        errorPipe.fileHandleForReading.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: .utf8) {
-                print(line, terminator: "")
-            }
-        }
-        
-        self.standardOutput = outputPipe
-        self.standardError = errorPipe
         
         try self.run()
         
