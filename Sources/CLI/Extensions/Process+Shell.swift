@@ -17,13 +17,13 @@ extension Process {
         
         outputPipe.fileHandleForReading.readabilityHandler = { pipe in
             if let line = String(data: pipe.availableData, encoding: .utf8) {
-                print(line)
+                print(line, terminator: "")
             }
         }
         
         errorPipe.fileHandleForReading.readabilityHandler = { pipe in
             if let line = String(data: pipe.availableData, encoding: .utf8) {
-                print(line)
+                print(line, terminator: "")
             }
         }
         
