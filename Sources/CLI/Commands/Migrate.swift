@@ -41,7 +41,7 @@ struct Migrate: ParsableCommand {
             struct \(name): Migration {
                 func up(schema: Schema) {
                     schema.create(table: "users") {
-                        $0.int("id").primary()
+                        $0.increments("id").primary()
                         $0.string("name").notNull()
                         $0.string("email").notNull().unique()
                     }
