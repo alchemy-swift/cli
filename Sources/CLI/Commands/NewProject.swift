@@ -31,11 +31,14 @@ struct NewProject: ParsableCommand {
     @Argument(help: "What to name your project.")
     var name: String
     
+    @Flag(name: .shortAndLong, help: "Show verbose output.")
+    var verbose: Bool = false
+    
     func run() throws {
         print("Cloning quickstart project...")
         // Blow away the temp directory so git doesn't complain if it already exists.
-        _ = try Process().shell("rm -rf \(kTempDirectory)")
-        _ = try Process().shell("git clone \(kQuickstartRepo) \(kTempDirectory)")
+        _ = try Process().shell("rm -rf \(kTempDirectory)", verbose: self.verbose)
+        _ = try Process().shell("git clone \(kQuickstartRepo) \(kTempDirectory)", verbose: self.verbose)
         
         try self.createProject()
     }
@@ -43,17 +46,17 @@ struct NewProject: ParsableCommand {
     private func createProject() throws {
         switch self.queryTemplateType() {
         case .backend:
-            _ = try Process().shell("cp -r \(kTempDirectory)/\(kBackendDirectory) \(self.name)")
-            _ = try Process().shell("git init \(name)")
+            _ = try Process().shell("cp -r \(kTempDirectory)/\(kBackendDirectory) \(self.name)", verbose: self.verbose)
+            _ = try Process().shell("git init \(name)", verbose: self.verbose)
             print("Created package at '\(self.name)'.")
         case .fullstack:
-            _ = try Process().shell("cp -r \(kTempDirectory)/\(kFullstackDirectory) \(self.name)")
+            _ = try Process().shell("cp -r \(kTempDirectory)/\(kFullstackDirectory) \(self.name)", verbose: self.verbose)
             
             let projectTarget = "\(self.name)/\(self.name).xcodeproj"
-            _ = try Process().shell("mv \(self.name)/\(kXcodeprojName) \(projectTarget)")
+            _ = try Process().shell("mv \(self.name)/\(kXcodeprojName) \(projectTarget)", verbose: self.verbose)
             // Rename relevant scheme containers so the iOS scheme loads properly.
-            _ = try Process().shell("find \(self.name) -type f -name '*.xcscheme' -print0 | xargs -0 sed -i '' -e 's/AlchemyFullstack/\(self.name)/g'")
-            _ = try Process().shell("git init \(name)")
+            _ = try Process().shell("find \(self.name) -type f -name '*.xcscheme' -print0 | xargs -0 sed -i '' -e 's/AlchemyFullstack/\(self.name)/g'", verbose: self.verbose)
+            _ = try Process().shell("git init \(name)", verbose: self.verbose)
             print("Created project at '\(self.name)'. Use the project file '\(projectTarget)'.")
         }
     }
