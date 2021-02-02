@@ -1,7 +1,7 @@
 import ArgumentParser
 import Foundation
 
-private let kQuickstartRepo = "git@github.com:joshuawright11/alchemy.git"
+private let kQuickstartRepo = "git@github.com:alchemy-swift/alchemy.git"
 private let kTempDirectory = "/tmp/alchemy-quickstart"
 private let kBackendDirectory = "Quickstarts/Backend"
 private let kFullstackDirectory = "Quickstarts/Fullstack"
